@@ -75,9 +75,9 @@ def process_data(data_dir, engine):
                 age = int(row[1])
                 bike = int(row[2])
                 start_station = int(row[3])
-                start_time = datetime.fromtimestamp(pendulum.parse("{}T{}".format(row[4], row[5])).timestamp())
+                start_time = datetime.fromtimestamp(pendulum.parse("{} {}".format(row[4], row[5]), strict=False).timestamp())
                 end_station = int(row[6])
-                end_time = datetime.fromtimestamp(pendulum.parse("{}T{}".format(row[7], row[8])).timestamp())
+                end_time = datetime.fromtimestamp(pendulum.parse("{} {}".format(row[7], row[8]), strict=False).timestamp())
 
                 rides.append(Ride(genre, age, bike, start_station, start_time, end_station, end_time))
                 cont += 1
