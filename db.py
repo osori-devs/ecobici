@@ -12,6 +12,8 @@ from sqlalchemy import Column, DateTime, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+import settings
+
 
 Base = declarative_base()
 
@@ -59,6 +61,9 @@ def process_data(data_dir, engine):
     def csv2db(filename):
         """
         Reads `filename`: for each line builds up the data and saves it in database.
+
+        Date format: DD/MM/YYYY
+        Time format: HH:MM:SS
         """
         rides = []
         with open(filename, "r", encoding="utf-8") as f:
@@ -77,9 +82,8 @@ def process_data(data_dir, engine):
                 rides.append(Ride(genre, age, bike, start_station, start_time, end_station, end_time))
                 cont += 1
                 
-                if cont == 2000:
-                    # we'll write every 2000 entries into the database.
-                    # The amount of entries should be configurable via a settings module.
+                if cont == settings.ROWS_TO_WRITE:
+                    # The amount of entries is configurable via the settings module.
                     session.add_all(rides)
                     session.commit()
                     rides = []
@@ -98,3 +102,7 @@ def main():
     
     create_tables(engine)
     process_data("data/csv", engine)  # the data is hosted in the data/csv directory, should be a setting in an addional module.
+
+
+if __name__ == "__main__":
+    main()
