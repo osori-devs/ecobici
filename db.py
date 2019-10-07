@@ -71,13 +71,9 @@ def process_data(data_dir, engine):
             reader = csv.reader(f, delimiter=',')
             cont = 0
             for row in reader:
-                genre = row[0]
-                age = int(row[1])
-                bike = int(row[2])
-                start_station = int(row[3])
-                start_time = datetime.fromtimestamp(pendulum.parse("{} {}".format(row[4], row[5]), strict=False).timestamp())
-                end_station = int(row[6])
-                end_time = datetime.fromtimestamp(pendulum.parse("{} {}".format(row[7], row[8]), strict=False).timestamp())
+                genre, age, bike = row[0], int(row[1]), int(row[2])
+                start_station, start_time = int(row[3]), datetime.fromtimestamp(pendulum.parse("{} {}".format(row[4], row[5]), strict=False).timestamp())
+                end_station, end_time = int(row[6]), datetime.fromtimestamp(pendulum.parse("{} {}".format(row[7], row[8]), strict=False).timestamp())
 
                 rides.append(Ride(genre, age, bike, start_station, start_time, end_station, end_time))
                 cont += 1
@@ -97,11 +93,13 @@ def process_data(data_dir, engine):
 
 
 def main():
-    
-    engine = create_engine('sqlite:///ecobici.db', echo=True)  # we'll use the SQLite engine for this iteration
-    
+
+    # we'll use the SQLite engine for this iteration
+    engine = create_engine('sqlite:///ecobici.db', echo=True)
+
     create_tables(engine)
-    process_data("data/csv", engine)  # the data is hosted in the data/csv directory, should be a setting in an addional module.
+    # the data is hosted in the data/csv directory, should be a setting in an addional module.
+    process_data("data/csv", engine)
 
 
 if __name__ == "__main__":
